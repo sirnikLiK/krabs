@@ -1,2 +1,1 @@
-print('hui')
-print('hui2')
+print("hello world")
