@@ -1,0 +1,37 @@
+<annotation>
+	<folder>labels</folder>
+	<filename>pexels-asphotography-190448.jpg</filename>
+	<path>/labels/pexels-asphotography-190448.jpg</path>
+	<source>
+		<database>Unspecified</database>
+	</source>
+	<size>
+		<width>6000</width>
+		<height>4000</height>
+		<depth>3</depth>
+	</size>
+	<object>
+		<name>trfl</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>234</xmin>
+			<ymin>1491</ymin>
+			<xmax>920</xmax>
+			<ymax>3011</ymax>
+		</bndbox>
+	</object>
+	<object>
+		<name>trfl</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>3609</xmin>
+			<ymin>858</ymin>
+			<xmax>4417</xmax>
+			<ymax>2538</ymax>
+		</bndbox>
+	</object>
+</annotation>

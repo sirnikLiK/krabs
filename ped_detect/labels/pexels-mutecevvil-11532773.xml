@@ -1,0 +1,37 @@
+<annotation>
+	<folder>labels</folder>
+	<filename>pexels-mutecevvil-11532773.jpg</filename>
+	<path>/labels/pexels-mutecevvil-11532773.jpg</path>
+	<source>
+		<database>Unspecified</database>
+	</source>
+	<size>
+		<width>4024</width>
+		<height>6037</height>
+		<depth>3</depth>
+	</size>
+	<object>
+		<name>trfl</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>1240</xmin>
+			<ymin>2484</ymin>
+			<xmax>2025</xmax>
+			<ymax>4526</ymax>
+		</bndbox>
+	</object>
+	<object>
+		<name>trfl</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>2018</xmin>
+			<ymin>2497</ymin>
+			<xmax>2907</xmax>
+			<ymax>4630</ymax>
+		</bndbox>
+	</object>
+</annotation>

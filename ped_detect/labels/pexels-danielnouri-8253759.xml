@@ -1,0 +1,25 @@
+<annotation>
+	<folder>labels</folder>
+	<filename>pexels-danielnouri-8253759.jpg</filename>
+	<path>/labels/pexels-danielnouri-8253759.jpg</path>
+	<source>
+		<database>Unspecified</database>
+	</source>
+	<size>
+		<width>2922</width>
+		<height>4383</height>
+		<depth>3</depth>
+	</size>
+	<object>
+		<name>trfl</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>1066</xmin>
+			<ymin>1064</ymin>
+			<xmax>2007</xmax>
+			<ymax>3253</ymax>
+		</bndbox>
+	</object>
+</annotation>

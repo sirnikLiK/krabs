@@ -1,0 +1,25 @@
+<annotation>
+	<folder>labels</folder>
+	<filename>pexels-vadim-timayev-119582430-12365433.jpg</filename>
+	<path>/labels/pexels-vadim-timayev-119582430-12365433.jpg</path>
+	<source>
+		<database>Unspecified</database>
+	</source>
+	<size>
+		<width>3376</width>
+		<height>6000</height>
+		<depth>3</depth>
+	</size>
+	<object>
+		<name>trfl</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>1359</xmin>
+			<ymin>2101</ymin>
+			<xmax>1939</xmax>
+			<ymax>3783</ymax>
+		</bndbox>
+	</object>
+</annotation>

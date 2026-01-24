@@ -1,0 +1,25 @@
+<annotation>
+	<folder>labels</folder>
+	<filename>pexels-divineleaders-7007930.jpg</filename>
+	<path>/labels/pexels-divineleaders-7007930.jpg</path>
+	<source>
+		<database>Unspecified</database>
+	</source>
+	<size>
+		<width>4898</width>
+		<height>3265</height>
+		<depth>3</depth>
+	</size>
+	<object>
+		<name>trfl</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>2282</xmin>
+			<ymin>641</ymin>
+			<xmax>3145</xmax>
+			<ymax>2624</ymax>
+		</bndbox>
+	</object>
+</annotation>

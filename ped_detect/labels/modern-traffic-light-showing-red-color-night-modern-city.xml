@@ -1,0 +1,25 @@
+<annotation>
+	<folder>labels</folder>
+	<filename>modern-traffic-light-showing-red-color-night-modern-city.jpg</filename>
+	<path>/labels/modern-traffic-light-showing-red-color-night-modern-city.jpg</path>
+	<source>
+		<database>Unspecified</database>
+	</source>
+	<size>
+		<width>4115</width>
+		<height>2747</height>
+		<depth>3</depth>
+	</size>
+	<object>
+		<name>trfl</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>2201</xmin>
+			<ymin>346</ymin>
+			<xmax>2769</xmax>
+			<ymax>1726</ymax>
+		</bndbox>
+	</object>
+</annotation>

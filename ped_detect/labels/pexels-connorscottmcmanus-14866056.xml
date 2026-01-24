@@ -1,0 +1,25 @@
+<annotation>
+	<folder>labels</folder>
+	<filename>pexels-connorscottmcmanus-14866056.jpg</filename>
+	<path>/labels/pexels-connorscottmcmanus-14866056.jpg</path>
+	<source>
+		<database>Unspecified</database>
+	</source>
+	<size>
+		<width>3264</width>
+		<height>4896</height>
+		<depth>3</depth>
+	</size>
+	<object>
+		<name>trfl</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>964</xmin>
+			<ymin>652</ymin>
+			<xmax>2105</xmax>
+			<ymax>4049</ymax>
+		</bndbox>
+	</object>
+</annotation>

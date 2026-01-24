@@ -1,0 +1,25 @@
+<annotation>
+	<folder>labels</folder>
+	<filename>pexels-eartharchive-6459840.jpg</filename>
+	<path>/labels/pexels-eartharchive-6459840.jpg</path>
+	<source>
+		<database>Unspecified</database>
+	</source>
+	<size>
+		<width>3872</width>
+		<height>5810</height>
+		<depth>3</depth>
+	</size>
+	<object>
+		<name>trfl</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>1686</xmin>
+			<ymin>686</ymin>
+			<xmax>3028</xmax>
+			<ymax>4331</ymax>
+		</bndbox>
+	</object>
+</annotation>

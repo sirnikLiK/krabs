@@ -1,0 +1,25 @@
+<annotation>
+	<folder>labels</folder>
+	<filename>pexels-vahapdmr-11422554.jpg</filename>
+	<path>/labels/pexels-vahapdmr-11422554.jpg</path>
+	<source>
+		<database>Unspecified</database>
+	</source>
+	<size>
+		<width>2584</width>
+		<height>3876</height>
+		<depth>3</depth>
+	</size>
+	<object>
+		<name>trfl</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>1142</xmin>
+			<ymin>1490</ymin>
+			<xmax>1508</xmax>
+			<ymax>2469</ymax>
+		</bndbox>
+	</object>
+</annotation>

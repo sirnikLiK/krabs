@@ -1,0 +1,25 @@
+<annotation>
+	<folder>labels</folder>
+	<filename>pexels-ahmad20-12270890.jpg</filename>
+	<path>/labels/pexels-ahmad20-12270890.jpg</path>
+	<source>
+		<database>Unspecified</database>
+	</source>
+	<size>
+		<width>2210</width>
+		<height>3095</height>
+		<depth>3</depth>
+	</size>
+	<object>
+		<name>trfl</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>1421</xmin>
+			<ymin>1283</ymin>
+			<xmax>1690</xmax>
+			<ymax>1918</ymax>
+		</bndbox>
+	</object>
+</annotation>

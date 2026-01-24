@@ -1,0 +1,25 @@
+<annotation>
+	<folder>labels</folder>
+	<filename>pexels-viridianaor-13202439.jpg</filename>
+	<path>/labels/pexels-viridianaor-13202439.jpg</path>
+	<source>
+		<database>Unspecified</database>
+	</source>
+	<size>
+		<width>3729</width>
+		<height>5086</height>
+		<depth>3</depth>
+	</size>
+	<object>
+		<name>trfl</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>1384</xmin>
+			<ymin>1196</ymin>
+			<xmax>2280</xmax>
+			<ymax>3218</ymax>
+		</bndbox>
+	</object>
+</annotation>

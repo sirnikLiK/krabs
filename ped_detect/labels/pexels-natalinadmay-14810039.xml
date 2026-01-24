@@ -1,0 +1,25 @@
+<annotation>
+	<folder>labels</folder>
+	<filename>pexels-natalinadmay-14810039.jpg</filename>
+	<path>/labels/pexels-natalinadmay-14810039.jpg</path>
+	<source>
+		<database>Unspecified</database>
+	</source>
+	<size>
+		<width>3472</width>
+		<height>4624</height>
+		<depth>3</depth>
+	</size>
+	<object>
+		<name>trfl</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>1642</xmin>
+			<ymin>1932</ymin>
+			<xmax>2064</xmax>
+			<ymax>3020</ymax>
+		</bndbox>
+	</object>
+</annotation>
