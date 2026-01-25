@@ -1,4 +1,4 @@
-# ATS_nto - Autonomous Transport System Project
+# ATS_nto - Autonomous Transport System 
 
 This project contains various computer vision modules for an autonomous vehicle or traffic simulation.
 
