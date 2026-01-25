@@ -1,25 +1,38 @@
 <annotation>
-	<folder>labels</folder>
+	<folder>img</folder>
 	<filename>pexels-divineleaders-7007930.jpg</filename>
-	<path>/labels/pexels-divineleaders-7007930.jpg</path>
+	<path>/home/stefano/Documents/ATS_nto/ped_detect/img/pexels-divineleaders-7007930.jpg</path>
 	<source>
-		<database>Unspecified</database>
+		<database>Unknown</database>
 	</source>
 	<size>
 		<width>4898</width>
 		<height>3265</height>
 		<depth>3</depth>
 	</size>
+	<segmented>0</segmented>
 	<object>
 		<name>trfl</name>
 		<pose>Unspecified</pose>
 		<truncated>0</truncated>
 		<difficult>0</difficult>
 		<bndbox>
-			<xmin>2282</xmin>
-			<ymin>641</ymin>
-			<xmax>3145</xmax>
-			<ymax>2624</ymax>
+			<xmin>2285</xmin>
+			<ymin>456</ymin>
+			<xmax>3085</xmax>
+			<ymax>2560</ymax>
+		</bndbox>
+	</object>
+	<object>
+		<name>trfl</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>1320</xmin>
+			<ymin>987</ymin>
+			<xmax>2030</xmax>
+			<ymax>2939</ymax>
 		</bndbox>
 	</object>
 </annotation>

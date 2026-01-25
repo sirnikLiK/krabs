@@ -1,25 +1,26 @@
 <annotation>
-	<folder>labels</folder>
+	<folder>img</folder>
 	<filename>pexels-vahapdmr-11422554.jpg</filename>
-	<path>/labels/pexels-vahapdmr-11422554.jpg</path>
+	<path>/home/stefano/Documents/ATS_nto/ped_detect/img/pexels-vahapdmr-11422554.jpg</path>
 	<source>
-		<database>Unspecified</database>
+		<database>Unknown</database>
 	</source>
 	<size>
 		<width>2584</width>
 		<height>3876</height>
 		<depth>3</depth>
 	</size>
+	<segmented>0</segmented>
 	<object>
 		<name>trfl</name>
 		<pose>Unspecified</pose>
 		<truncated>0</truncated>
 		<difficult>0</difficult>
 		<bndbox>
-			<xmin>1142</xmin>
-			<ymin>1490</ymin>
-			<xmax>1508</xmax>
-			<ymax>2469</ymax>
+			<xmin>1107</xmin>
+			<ymin>1462</ymin>
+			<xmax>1571</xmax>
+			<ymax>2434</ymax>
 		</bndbox>
 	</object>
 </annotation>

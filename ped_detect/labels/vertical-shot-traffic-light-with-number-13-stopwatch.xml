@@ -1,13 +1,13 @@
 <annotation>
 	<folder>img</folder>
-	<filename>pexels-vahapdmr-14340513.jpg</filename>
-	<path>/home/stefano/Documents/ATS_nto/ped_detect/img/pexels-vahapdmr-14340513.jpg</path>
+	<filename>vertical-shot-traffic-light-with-number-13-stopwatch.jpg</filename>
+	<path>/home/stefano/Documents/ATS_nto/ped_detect/img/vertical-shot-traffic-light-with-number-13-stopwatch.jpg</path>
 	<source>
 		<database>Unknown</database>
 	</source>
 	<size>
 		<width>4000</width>
-		<height>6000</height>
+		<height>5600</height>
 		<depth>3</depth>
 	</size>
 	<segmented>0</segmented>
@@ -17,10 +17,10 @@
 		<truncated>0</truncated>
 		<difficult>0</difficult>
 		<bndbox>
-			<xmin>1858</xmin>
-			<ymin>2683</ymin>
-			<xmax>2630</xmax>
-			<ymax>4400</ymax>
+			<xmin>1244</xmin>
+			<ymin>289</ymin>
+			<xmax>2918</xmax>
+			<ymax>3410</ymax>
 		</bndbox>
 	</object>
 </annotation>

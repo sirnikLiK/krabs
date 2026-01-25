@@ -1,25 +1,26 @@
 <annotation>
-	<folder>labels</folder>
+	<folder>img</folder>
 	<filename>pexels-asphotography-190448.jpg</filename>
-	<path>/labels/pexels-asphotography-190448.jpg</path>
+	<path>/home/stefano/Documents/ATS_nto/ped_detect/img/pexels-asphotography-190448.jpg</path>
 	<source>
-		<database>Unspecified</database>
+		<database>Unknown</database>
 	</source>
 	<size>
 		<width>6000</width>
 		<height>4000</height>
 		<depth>3</depth>
 	</size>
+	<segmented>0</segmented>
 	<object>
 		<name>trfl</name>
 		<pose>Unspecified</pose>
 		<truncated>0</truncated>
 		<difficult>0</difficult>
 		<bndbox>
-			<xmin>234</xmin>
-			<ymin>1491</ymin>
-			<xmax>920</xmax>
-			<ymax>3011</ymax>
+			<xmin>218</xmin>
+			<ymin>1492</ymin>
+			<xmax>972</xmax>
+			<ymax>3058</ymax>
 		</bndbox>
 	</object>
 	<object>
@@ -28,10 +29,10 @@
 		<truncated>0</truncated>
 		<difficult>0</difficult>
 		<bndbox>
-			<xmin>3609</xmin>
-			<ymin>858</ymin>
-			<xmax>4417</xmax>
-			<ymax>2538</ymax>
+			<xmin>3610</xmin>
+			<ymin>908</ymin>
+			<xmax>4405</xmax>
+			<ymax>2529</ymax>
 		</bndbox>
 	</object>
 </annotation>

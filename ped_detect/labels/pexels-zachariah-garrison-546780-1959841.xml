@@ -1,25 +1,26 @@
 <annotation>
-	<folder>labels</folder>
+	<folder>img</folder>
 	<filename>pexels-zachariah-garrison-546780-1959841.jpg</filename>
-	<path>/labels/pexels-zachariah-garrison-546780-1959841.jpg</path>
+	<path>/home/stefano/Documents/ATS_nto/ped_detect/img/pexels-zachariah-garrison-546780-1959841.jpg</path>
 	<source>
-		<database>Unspecified</database>
+		<database>Unknown</database>
 	</source>
 	<size>
 		<width>4000</width>
 		<height>6000</height>
 		<depth>3</depth>
 	</size>
+	<segmented>0</segmented>
 	<object>
 		<name>trfl</name>
 		<pose>Unspecified</pose>
 		<truncated>0</truncated>
 		<difficult>0</difficult>
 		<bndbox>
-			<xmin>595</xmin>
-			<ymin>632</ymin>
-			<xmax>2496</xmax>
-			<ymax>5162</ymax>
+			<xmin>669</xmin>
+			<ymin>555</ymin>
+			<xmax>2591</xmax>
+			<ymax>5133</ymax>
 		</bndbox>
 	</object>
 </annotation>
