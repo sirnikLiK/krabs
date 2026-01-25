@@ -1,16 +1,23 @@
 import cv2 as cv
 import numpy as np
 
-# Load reference images
+# --- Object Detection Template Matching ---
+# This script uses reference images (ref1.png, ref2.png) to identify objects 
+# in the video feed by comparing them to detected contours.
+
+# --- Load Reference Images ---
+# These images are the "ground truth" to look for.
 ref1 = cv.imread('ref1.png')
 ref2 = cv.imread('ref2.png')
 
 # Resize references to 64x64 if they exist
+# A fixed size is crucial for pixel-by-pixel comparison (absdiff)
 if ref1 is not None:
     ref1 = cv.resize(ref1, (64, 64))
 if ref2 is not None:
     ref2 = cv.resize(ref2, (64, 64))
 
+# Open default camera (index 1 often refers to external USB cam)
 cap = cv.VideoCapture(1)
  
 while(True):
@@ -20,35 +27,51 @@ while(True):
         break
     copyf = frame.copy()
         
+    # --- Preprocessing & Contour Detection ---
+    # Convert to HSV color space for better color segmentation
     frameHSV = cv.cvtColor(frame, cv.COLOR_BGR2HSV) 
+    # Blur to reduce noise
     frameBlur = cv.blur(frameHSV, (5, 5))
+    # Create a binary mask for the target color range (Greenish/Yelllowish?)
     mask = cv.inRange(frameBlur, (0,143,124), (212,245,207))
-    maskEr = cv.erode(mask, None, iterations=2)
-    maskDil = cv.dilate(mask, None, iterations=4)
+    
+    # Morphological operations to clean up the mask
+    maskEr = cv.erode(mask, None, iterations=2) # Remove small noise
+    maskDil = cv.dilate(mask, None, iterations=4) # Connect broken parts
+    
+    # Find contours in the mask
     contours, _ = cv.findContours(maskDil, cv.RETR_TREE, cv.CHAIN_APPROX_NONE)
     
     if contours:
+        # Sort contours by area (largest first) and take the biggest one
         contours = sorted(contours, key=cv.contourArea, reverse=True)
         cv.drawContours(frame, contours[0], -1, (255,0,255), 3)
+        
+        # Get Bounding Box of the largest contour
         (x,y,w,h) = cv.boundingRect(contours[0])
         cv.rectangle(frame, (x,y), (x+w,y+h), (0,255,0), 2)
+        
+        # Extract Region of Interest (ROI) - the potential object
         roImg = copyf[y:y+h, x:x+w]
         
         # Resize detected object
+        # Resize detected detected ROI to fixed 64x64 for comparison
         try:
             roImgResized = cv.resize(roImg, (64, 64))
             
             best_match = "None"
             max_similarity = -1
 
+            # --- Template Matching / Comparison ---
             # Compare with ref1
             if ref1 is not None:
-                # Calculate absolute difference
+                # Calculate absolute difference between ROI and Reference
                 diff1 = cv.absdiff(roImgResized, ref1)
-                # Count pixels with small difference (e.g. less than 30 intensity difference)
+                # Count the number of 'similar' pixels (difference < 30)
                 less_than_30_1 = np.less(diff1, 30)
                 match_count_1 = np.sum(less_than_30_1)
                 
+                # Check if this is the best match so far
                 if match_count_1 > max_similarity:
                     max_similarity = match_count_1
                     best_match = "1"

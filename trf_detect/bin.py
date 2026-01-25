@@ -1,16 +1,23 @@
 import cv2 as cv
 import numpy as np
 
-# Load reference images
+# --- Object Detection using Template Matching ---
+# Purpose: Identify specific objects (e.g., signs) by comparing dtected contours 
+# against reference images ('ref1.png', 'ref2.png').
+
+# --- Load Reference Images ---
 ref1 = cv.imread('ref1.png')
 ref2 = cv.imread('ref2.png')
 
-# Resize references to 64x64 if they exist
+# Resize references to 64x64 pixels.
+# We resize both the reference and the detected object to this fixed size
+# to perform pixel-by-pixel subtraction/comparison.
 if ref1 is not None:
     ref1 = cv.resize(ref1, (64, 64))
 if ref2 is not None:
     ref2 = cv.resize(ref2, (64, 64))
 
+# Open Camera (Index 1)
 cap = cv.VideoCapture(1)
  
 while(True):
@@ -35,17 +42,19 @@ while(True):
         roImg = copyf[y:y+h, x:x+w]
         
         # Resize detected object
+        # Resize detected object ROI to 64x64 for comparison
         try:
             roImgResized = cv.resize(roImg, (64, 64))
             
             best_match = "None"
             max_similarity = -1
 
+            # --- Template Matching ---
             # Compare with ref1
             if ref1 is not None:
-                # Calculate absolute difference
+                # absdiff: Calculates absolute difference between each pixel
                 diff1 = cv.absdiff(roImgResized, ref1)
-                # Count pixels with small difference (e.g. less than 30 intensity difference)
+                # Count matching pixels (where difference is small, e.g., < 30)
                 less_than_30_1 = np.less(diff1, 30)
                 match_count_1 = np.sum(less_than_30_1)
                 
