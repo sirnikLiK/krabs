@@ -20,3 +20,9 @@ This project contains various computer vision modules for an autonomous vehicle 
 ### 4. `ped_detect/` - Pedestrian/Object Detection
 *   **`main.py`**: Runs a trained SVM Object Detector on the video feed.
 *   **`svm_trn.py`**: Script to train the SVM detector using images and XML labels.
+
+### 5. `inf/` - Programming Problems
+*   **`1.py`**: Solves a problem related % and //
+*   **`2.py`**: Solves a problem related бля какие уроды составляли задача
+*   **`3.py`**: Solves a problem related bottleneck method
+*   **`4.py`**: Solves a problem related 
