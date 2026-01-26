@@ -17,7 +17,9 @@ dst_draw = np.array(dst, dtype=np.int32)
 
 # --- Camera Initialization ---
 # Attempt to open the primary camera (index 1)
-cap = cv2.VideoCapture(1)
+stream_url = "http://10.160.166.218:5000/video_feed"
+
+cap = cv2.VideoCapture(stream_url)
 if not cap.isOpened():
     print("Camera 1 failed, trying Camera 0...")
     # Fallback to secondary camera (index 0)

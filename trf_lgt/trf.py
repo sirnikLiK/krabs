@@ -5,9 +5,11 @@ import numpy
 # Purpose: Detect traffic light state (Red/Yellow/Green) by analyzing 
 # color value sums in specific regions of interest (ROI).
 
-cap = cv2.VideoCapture(1)   
+stream_url = "http://10.160.166.218:5000/video_feed"
+
+stream = cv2.VideoCapture(stream_url)
 while(True):
-    ret, frame = cap.read()
+    ret, frame = stream.read()
     # Resize frame to a small vertical strip (60x120)
     # This implies the camera is focused/cropped on a specific traffic light
     rgb = cv2.resize(frame,(60, 120))
