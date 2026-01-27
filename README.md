@@ -1,4 +1,8 @@
+<<<<<<< HEAD
+# ATS_nto - Autonomous Transport System 
+=======
 # 🏎️ ATS_nto: Учебный Конспект по Системе Автономного Транспорта
+>>>>>>> cd455ea (refactor: Reorganize project structure into a modular `src` directory, migrating detection, vision, network, and hardware components.)
 
 ![Project Banner](https://img.shields.io/badge/ATS-Autonomous_Transport-blue?style=for-the-badge&logo=python)
 ![OpenCV](https://img.shields.io/badge/OpenCV-5C3EE8?style=for-the-badge&logo=opencv&logoColor=white)
