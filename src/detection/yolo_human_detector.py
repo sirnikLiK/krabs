@@ -2,7 +2,7 @@ from ultralytics import YOLO
 # from roboflow import download_dataset
 import cv2
 
-model = YOLO("/home/stefano/Documents/ATS_nto/src/detection/best.pt")
+model = YOLO("/home/stefano/Documents/ATS_nto (copy)/src/detection/models/best.pt")
 
 
 cap = cv2.VideoCapture(0)
