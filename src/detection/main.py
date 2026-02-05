@@ -7,7 +7,7 @@ import time
 # --- НАСТРОЙКИ ---
 SERIAL_PORT = '/dev/ttyACM0'  # Порт из твоего скриншота
 BAUD_RATE = 9600
-MODEL_PATH = "tld_test.svm"
+MODEL_PATH = "/home/stefano/Documents/ATS_nto/src/detection/tld_test.svm"
 
 # --- ИНИЦИАЛИЗАЦИЯ SERIAL ---
 try:
@@ -75,7 +75,7 @@ while True:
         except Exception as e:
             print(f"📡 Ошибка связи: {e}")
 
-    #cv2.imshow("Detection", frame)
+    cv2.imshow("Detection", frame)
     if cv2.waitKey(1) == ord('q'): break
 
 if ser: ser.close()
