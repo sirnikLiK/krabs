@@ -16,7 +16,7 @@ except Exception as e:
     ser = None
 
 # --- НАСТРОЙКИ МОДЕЛИ ---
-net = cv2.dnn.readNetFromONNX("/home/stefano/Documents/ATS_nto (copy)/src/detection/models/best.onnx")
+net = cv2.dnn.readNetFromONNX("/Users/kli/Desktop/ATS_nto/src/detection/models/best.onnx")
 net.setPreferableBackend(cv2.dnn.DNN_BACKEND_DEFAULT)
 net.setPreferableTarget(cv2.dnn.DNN_TARGET_OPENCL)
 
