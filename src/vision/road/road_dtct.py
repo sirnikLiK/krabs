@@ -1,181 +1,215 @@
 import cv2
 import numpy as np
+import math
+import serial
+import time
 
-# --- Configuration & Constants ---
-# Defined image size for processing [Height, Width]
-img_size = [200, 360] 
+# --- НАСТРОЙКИ ---
+SERIAL_PORT = '/dev/ttyACM0' 
+BAUD_RATE = 9600
+IMG_SIZE = (360, 200)
+CENTER_X = IMG_SIZE[0] // 2 
 
-# Source points for perspective transform (Trapezoid on the road)
-# Order: Bottom-Left, Bottom-Right, Top-Right, Top-Left
-src = np.float32([[20, 200], [350, 200], [275, 120], [85, 120]])
-src_draw = np.array(src, dtype=np.int32)
+# !!! ГЛАВНАЯ НАСТРОЙКА !!!
+# Если робот едет слишком близко к правой линии -> УВЕЛИЧЬ это число (поставь 200, 220)
+# Если робот едет слишком близко к левой линии -> УМЕНЬШИ это число
+LANE_WIDTH = 210  
 
-# Destination points for perspective transform (Rectangle from top view)
-# Order: Bottom-Left, Bottom-Right, Top-Right, Top-Left
-dst = np.float32([[0, img_size[0]], [img_size[1], img_size[0]], [img_size[1], 0], [0, 0]])
-dst_draw = np.array(dst, dtype=np.int32)
+# Сколько кадров помнить линию, если она исчезла (для пунктира)
+MEMORY_FRAMES = 10 
 
-# --- Camera Initialization ---
-# Attempt to open the primary camera (index 1)
-stream_url = "http://10.160.166.218:5000/video_feed"
+try:
+    ser = serial.Serial(SERIAL_PORT, BAUD_RATE, timeout=0.1)
+    time.sleep(2) 
+    print(f"✅ Подключено к {SERIAL_PORT}")
+except Exception as e:
+    print(f"❌ Ошибка Serial: {e}"); ser = None
 
-cap = cv2.VideoCapture(stream_url)
-if not cap.isOpened():
-    print("Camera 1 failed, trying Camera 0...")
-    # Fallback to secondary camera (index 0)
-    cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture(0)
 
-if not cap.isOpened():
-    print("Error: Could not open any camera.")
-    exit()
+# Перспектива (подстрой src под свою камеру, если линии кривые)
+src = np.float32([[10, 190], [350, 190], [270, 110], [90, 110]])
+dst = np.float32([[80, 200], [280, 200], [280, 0], [80, 0]])
+M = cv2.getPerspectiveTransform(src, dst)
+Minv = cv2.getPerspectiveTransform(dst, src)
 
+# Переменные памяти (храним последние найденные линии)
+last_l_fit = None
+last_r_fit = None
+lost_l_counter = 0
+lost_r_counter = 0
+last_sent_data = ""
+last_servo_val = 90
 
-while(True):
+while True:
     ret, frame = cap.read()
-    if not ret:
-        print("Failed to read frame")
-        break
+    if not ret: break
         
-    # Resize frame for faster processing and to match calibration
-    resized = cv2.resize(frame, (img_size[1], img_size[0]))
+    frame = cv2.resize(frame, IMG_SIZE)
     
-    # --- Color Thresholding ---
-    # 1. Red Channel Mask (Good for white/yellow lines on dark road)
-    r_channel = resized[:, :, 2]
-    binnary=np.zeros_like(r_channel)
-    # Filter pixels with Red value > 100
-    binnary[(r_channel>100)] = 1
+    # 1. HLS фильтр (белый цвет)
+    hls = cv2.cvtColor(frame, cv2.COLOR_BGR2HLS)
+    mask = cv2.inRange(hls, np.array([0, 150, 0]), np.array([180, 255, 255]))
     
-    # 2. Saturation Channel Mask (HLS Color Space) - Good for shadows/lighting changes
-    hls = cv2.cvtColor(resized, cv2.COLOR_BGR2HLS)
-    s_channel = hls[:, :, 2]
-    binnary2=np.zeros_like(s_channel)
-    # Filter pixels with Saturation > 160
-    binnary2[(s_channel>160)] = 1
+    # Морфология (убираем шум)
+    kernel = np.ones((5,5), np.uint8)
+    mask = cv2.morphologyEx(mask, cv2.MORPH_OPEN, kernel)
+    mask = cv2.morphologyEx(mask, cv2.MORPH_CLOSE, kernel)
     
-    # Combine both makes (Bitwise OR)
-    allbinnary = np.zeros_like(binnary)
-    allbinnary[(binnary==1) | (binnary2==1)] = 255
-    
-    # Vizualize the binary mask and the source points
-    cv2.imshow("frame", allbinnary)
-    allbinnary_vizual = allbinnary.copy()
-    cv2.polylines(allbinnary_vizual, [src_draw], True, 255, 2)
-    cv2.imshow("allbinnary_vizual", allbinnary_vizual)
+    warped = cv2.warpPerspective(mask, M, IMG_SIZE)
+    bev_debug = cv2.cvtColor(warped, cv2.COLOR_GRAY2BGR)
 
-    # --- Perspective Transform (Bird's Eye View) ---
-    m = cv2.getPerspectiveTransform(src, dst)
-    # Warp the binary image to top-down view
-    warped = cv2.warpPerspective(allbinnary, m, (img_size[1], img_size[0]), flags = cv2.INTER_LINEAR)
-    cv2.imshow("warped", warped)
-
-    # --- Lane Finding: Histogram & Sliding Window ---
-    # Take a histogram of the bottom half of the image
-    histogram = np.sum(warped[warped.shape[0]//2:,:], axis=0)
-
-    # Find the peak of the left and right halves of the histogram
-    # These will be the starting point for the left and right lines
-    midpoint = histogram.shape[0]//2
+    # 2. Поиск линий (Гистограмма)
+    histogram = np.sum(warped[int(warped.shape[0]/2):,:], axis=0)
+    midpoint = int(histogram.shape[0]/2)
+    
+    # Ищем базы линий
     leftx_base = np.argmax(histogram[:midpoint])
     rightx_base = np.argmax(histogram[midpoint:]) + midpoint
 
-    # Vizualize histogram peaks
-    out = warped.copy()
-    cv2.line(out, (leftx_base, 0), (leftx_base, warped.shape[0]), 110, 2)
-    cv2.line(out, (rightx_base, 0), (rightx_base, warped.shape[0]), 110, 2)
-    cv2.imshow("out", out)
-    
-    # Sliding Window Parameters
-    windows = 9
-    windows_high = int(warped.shape[0]/windows)
-    windows_half_width = 25 # Width of the window +/- from center
+    # Проверяем, есть ли там вообще пиксели (защита от пустых мест)
+    left_detected_now = histogram[leftx_base] > 50
+    right_detected_now = histogram[rightx_base] > 50
 
-    # Current positions to be updated for each window
-    xcentre_left = leftx_base
-    xcentre_right = rightx_base
+    # Скользящие окна
+    nz = warped.nonzero()
+    ny, nx = np.array(nz[0]), np.array(nz[1])
+    l_inds, r_inds = [], []
+    win_h, margin = 20, 50
+    cur_l, cur_r = leftx_base, rightx_base
 
-    # Store indices of lane pixels
-    left_lane_inds = np.array([],dtype=np.int16)
-    right_lane_inds = np.array([],dtype=np.int16)
-
-    # Create an output image to draw on and visualize the result
-    out = np.dstack((warped, warped, warped))
-    
-    # Identify all non-zero pixels in the image
-    nonzero = warped.nonzero()
-    WhitePixelY = np.array(nonzero[0])
-    WhitePixelX = np.array(nonzero[1])
-
-
-    
-    
-    for window in range(windows):
-        # Identify window boundaries in x and y (and right and left)
-        win_ylow = warped.shape[0] - (window+1)*windows_high
-        win_yhigh = warped.shape[0] - window*windows_high
-        win_x1 = xcentre_left - windows_half_width
-        win_x2 = xcentre_left + windows_half_width
-        win_x3 = xcentre_right - windows_half_width
-        win_x4 = xcentre_right + windows_half_width
-           
-        # Draw the windows on the visualization image
-        cv2.rectangle(out, (win_x1, win_ylow), (win_x2, win_yhigh), (0, 255, 0), 2)
-        cv2.rectangle(out, (win_x3, win_ylow), (win_x4, win_yhigh), (0, 255, 0), 2)
+    for w in range(9):
+        y_low, y_high = warped.shape[0]-(w+1)*win_h, warped.shape[0]-w*win_h
         
-        # Identify the nonzero pixels in x and y within the window
-        gd_left_inds = ((WhitePixelY >= win_ylow) & (WhitePixelY < win_yhigh) & 
-                        (WhitePixelX >= win_x1) & (WhitePixelX < win_x2)).nonzero()[0]
-                        
-        gd_right_inds = ((WhitePixelY >= win_ylow) & (WhitePixelY < win_yhigh) & 
-                         (WhitePixelX >= win_x3) & (WhitePixelX < win_x4)).nonzero()[0]
+        if left_detected_now:
+            l_idx = ((ny >= y_low) & (ny < y_high) & (nx >= cur_l-margin) & (nx < cur_l+margin)).nonzero()[0]
+            l_inds.append(l_idx)
+            if len(l_idx) > 20: cur_l = int(np.mean(nx[l_idx]))
+
+        if right_detected_now:
+            r_idx = ((ny >= y_low) & (ny < y_high) & (nx >= cur_r-margin) & (nx < cur_r+margin)).nonzero()[0]
+            r_inds.append(r_idx)
+            if len(r_idx) > 20: cur_r = int(np.mean(nx[r_idx]))
+
+    try:
+        ploty = np.linspace(0, warped.shape[0]-1, 20)
+        l_fit, r_fit = None, None
+
+        # --- ЛОГИКА ПАМЯТИ (Для прерывистых линий) ---
         
-        # Append these indices to the lists
-        left_lane_inds = np.concatenate((left_lane_inds, gd_left_inds))
-        right_lane_inds = np.concatenate((right_lane_inds, gd_right_inds))
-
-        # If you found > 50 pixels, recenter next window on their mean position
-        if len(gd_left_inds) > 50:
-            xcentre_left = int(np.mean(WhitePixelX[gd_left_inds]))
-        if len(gd_right_inds) > 50:
-            xcentre_right = int(np.mean(WhitePixelX[gd_right_inds]))
+        # Обработка ЛЕВОЙ линии
+        if l_inds:
+            l_inds_concat = np.concatenate(l_inds)
+            if len(l_inds_concat) > 50:
+                l_fit = np.polyfit(ny[l_inds_concat], nx[l_inds_concat], 2)
+                last_l_fit = l_fit # Обновляем память
+                lost_l_counter = 0
         
-    
-        # Color the identified lane pixels (Red for left, Blue for right)
-        out[WhitePixelY[left_lane_inds], WhitePixelX[left_lane_inds]] = [255, 0, 0]
-        out[WhitePixelY[right_lane_inds], WhitePixelX[right_lane_inds]] = [0, 0, 255]
+        # Если левой линии сейчас нет, но в памяти она свежая -> берем из памяти
+        if l_fit is None and last_l_fit is not None and lost_l_counter < MEMORY_FRAMES:
+            l_fit = last_l_fit
+            lost_l_counter += 1
+        elif l_fit is None:
+            lost_l_counter += 1
 
-    
+        # Обработка ПРАВОЙ линии
+        if r_inds:
+            r_inds_concat = np.concatenate(r_inds)
+            if len(r_inds_concat) > 50:
+                r_fit = np.polyfit(ny[r_inds_concat], nx[r_inds_concat], 2)
+                last_r_fit = r_fit # Обновляем память
+                lost_r_counter = 0
 
-    lefty = WhitePixelY[left_lane_inds]
-    leftx = WhitePixelX[left_lane_inds]
-    righty = WhitePixelY[right_lane_inds]
-    rightx = WhitePixelX[right_lane_inds]
+        if r_fit is None and last_r_fit is not None and lost_r_counter < MEMORY_FRAMES:
+            r_fit = last_r_fit
+            lost_r_counter += 1
+        elif r_fit is None:
+            lost_r_counter += 1
 
-    # --- Polynomial Fitting (Curvature Calculation) ---
-    if len(lefty) > 0 and len(righty) > 0:
-        # Fit a second order polynomial to each
-        # Returns [A, B, C] for Ax^2 + Bx + C
-        left_fit = np.polyfit(lefty, leftx, 2)
-        right_fit = np.polyfit(righty, rightx, 2)
+        # --- РАСЧЕТ ЦЕНТРА ---
         
-        # Calculate the center of the lane (average of left and right polylines)
-        center_fit = (left_fit + right_fit) / 2
-
-        # Draw the calculated path
-        for ver_ind in range(out.shape[0]):
-            # Calculate x position for each y position (ver_ind)
-            gor_ind = (center_fit[0]*ver_ind**2 +
-                center_fit[1]*ver_ind +
-                center_fit[2])
+        if l_fit is not None and r_fit is not None:
+            # Видим ОБЕ линии (или помним обе) -> Идеальный центр
+            center_fit = (l_fit + r_fit) / 2
             
-            # Draw point (line thickness = 1 makes it look like a curve)
-            cv2.circle(out, (int(gor_ind), ver_ind), 1, (255, 0, 255), 2)
-    else:
-         print("No lanes detected")
+            # (Опционально) Можно подправлять LANE_WIDTH автоматически, если видим обе
+            # real_width = (r_fit[2] - l_fit[2])
+            # LANE_WIDTH = int(real_width) 
+            
+        elif r_fit is not None:
+            # Видим только ПРАВУЮ -> Отступаем влево на LANE_WIDTH
+            center_fit = r_fit.copy()
+            center_fit[2] -= (LANE_WIDTH / 2) # Делим на 2, чтобы попасть в центр
+            
+            # Но если мы хотим ехать ровно посередине между линиями, 
+            # координата центра = Правая - (Половина ширины дороги)
+            # В данном коде LANE_WIDTH - это полная ширина дороги.
+            # Поэтому центр будет: r_fit - (LANE_WIDTH / 2)
+            # Исправляем логику для точности:
+            l_fit_simulated = r_fit.copy()
+            l_fit_simulated[2] -= LANE_WIDTH
+            center_fit = (l_fit_simulated + r_fit) / 2
+            
+        elif l_fit is not None:
+            # Видим только ЛЕВУЮ (пунктир появился) -> Отступаем вправо
+            r_fit_simulated = l_fit.copy()
+            r_fit_simulated[2] += LANE_WIDTH
+            center_fit = (l_fit + r_fit_simulated) / 2
+            
+        else:
+            raise ValueError("All lines lost")
 
-    cv2.imshow("out", out)
-    if cv2.waitKey(1) == ord("q"):
-        break
+        # --- УПРАВЛЕНИЕ ---
+        y_bottom = float(warped.shape[0] - 1)
+        y_ahead = y_bottom - 60
 
+        x_center_bottom = center_fit[0]*y_bottom**2 + center_fit[1]*y_bottom + center_fit[2]
+        x_center_ahead = center_fit[0]*y_ahead**2 + center_fit[1]*y_ahead + center_fit[2]
+
+        offset_error = x_center_bottom - CENTER_X
+        angle_deg = math.degrees(math.atan2(x_center_ahead - x_center_bottom, y_bottom - y_ahead))
+
+        # P-регулятор
+        target_servo = int(90 + angle_deg + (offset_error * 0.4))
+        
+        # Сглаживание
+        servo_val = int(last_servo_val * 0.7 + target_servo * 0.3)
+        servo_val = max(50, min(130, servo_val))
+        last_servo_val = servo_val
+
+        # Отправка
+        data_to_send = f"1;{servo_val}\n"
+        if ser and data_to_send != last_sent_data:
+            ser.write(data_to_send.encode())
+            last_sent_data = data_to_send
+            print(f"Angle: {servo_val} | Offset: {int(offset_error)} | Using Memory: L={lost_l_counter}, R={lost_r_counter}")
+
+        # --- ОТРИСОВКА ---
+        road_canvas = np.zeros_like(frame)
+        
+        # Рисуем линии, если они есть (или в памяти)
+        if l_fit is not None:
+            l_x = l_fit[0]*ploty**2 + l_fit[1]*ploty + l_fit[2]
+            cv2.polylines(road_canvas, [np.int32(np.transpose(np.vstack([l_x, ploty])))], False, (0, 255, 255), 3) # Желтая левая
+            
+        if r_fit is not None:
+            r_x = r_fit[0]*ploty**2 + r_fit[1]*ploty + r_fit[2]
+            cv2.polylines(road_canvas, [np.int32(np.transpose(np.vstack([r_x, ploty])))], False, (0, 0, 255), 3) # Красная правая
+
+        # Рисуем центр (синяя)
+        c_x = center_fit[0]*ploty**2 + center_fit[1]*ploty + center_fit[2]
+        cv2.polylines(road_canvas, [np.int32(np.transpose(np.vstack([c_x, ploty])))], False, (255, 255, 0), 4)
+
+        overlay = cv2.warpPerspective(road_canvas, Minv, IMG_SIZE)
+        frame = cv2.addWeighted(frame, 1, overlay, 0.6, 0)
+
+    except Exception:
+        cv2.putText(frame, "SEARCHING...", (10, 50), 1, 2, (0, 0, 255), 2)
+        if ser: ser.write(b"1;90\n")
+
+    cv2.imshow("Dual Lane Memory", np.hstack((frame, bev_debug)))
+    if cv2.waitKey(1) == ord('q'): break
+
+if ser: ser.close()
 cap.release()
 cv2.destroyAllWindows()
