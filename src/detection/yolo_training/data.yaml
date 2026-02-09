@@ -1,0 +1,8 @@
+path: . # dataset root dir
+train: datasets/images/train  # train images (relative to 'path')
+val: datasets/images/val  # val images (relative to 'path')
+
+# Classes
+nc: 1  # number of classes
+names: ['person']  # class names
+# names: ['person', 'stop_sign', 'traffic_light'] # Example for multiple classes
