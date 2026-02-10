@@ -50,7 +50,8 @@ def main():
     
     print(f"--- ADVANCED DATA COLLECTION ---")
     print(f"Saving to: {os.path.abspath(args.root)}")
-    print(f"[SPACE] Capture Image")
+    print(f"[SPACE] Capture FULL Image")
+    print(f"[r] Select ROI and Save CROP")
     print(f"[v] Toggle Train/Val (Current: {current_set.upper()})")
     print(f"[c] Change Class")
     print(f"[q] Quit")
@@ -67,7 +68,7 @@ def main():
         
         cv2.putText(display_frame, f"Class: {current_class_name.upper()} [{current_class_idx}]", (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255), 2)
         cv2.putText(display_frame, f"Set: {current_set.upper()}", (10, 60), cv2.FONT_HERSHEY_SIMPLEX, 0.7, color, 2)
-        cv2.putText(display_frame, "Press SPACE to save", (10, 90), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (200, 200, 200), 1)
+        cv2.putText(display_frame, "[SPACE] Full  [r] Crop", (10, 90), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (200, 200, 200), 1)
 
         cv2.imshow("Data Collection", display_frame)
         
@@ -79,15 +80,35 @@ def main():
             current_set = "val" if current_set == "train" else "train"
         elif key == ord('c'):
             current_class_idx = (current_class_idx + 1) % len(CLASSES)
+        elif key == ord('r'):
+            # Select ROI
+            roi = cv2.selectROI("Select ROI (ENTER to confirm, ESC to cancel)", frame, fromCenter=False)
+            cv2.destroyWindow("Select ROI (ENTER to confirm, ESC to cancel)")
+            
+            if roi != (0, 0, 0, 0):
+                x, y, w, h = roi
+                crop = frame[y:y+h, x:x+w]
+                
+                target_dir = train_dir if current_set == "train" else val_dir
+                prefix = f"{current_class_name}_crop"
+                filename = get_next_filename(target_dir, prefix)
+                filepath = os.path.join(target_dir, filename)
+                
+                cv2.imwrite(filepath, crop)
+                print(f"Saved CROP [{current_set.upper()}][{current_class_name}]: {filename}")
+                
+                # Feedback
+                cv2.imshow("Data Collection", 255 - display_frame)
+                cv2.waitKey(100)
         elif key == ord(' '):
-            # Save Image
+            # Save Full Image
             target_dir = train_dir if current_set == "train" else val_dir
             prefix = current_class_name
             filename = get_next_filename(target_dir, prefix)
             filepath = os.path.join(target_dir, filename)
             
             cv2.imwrite(filepath, frame)
-            print(f"Saved [{current_set.upper()}][{current_class_name}]: {filename}")
+            print(f"Saved FULL [{current_set.upper()}][{current_class_name}]: {filename}")
             
             # Flash effect
             cv2.imshow("Data Collection", 255 - display_frame)
