@@ -1,0 +1,38 @@
+<annotation>
+	<folder>images</folder>
+	<filename>vid6-180.png</filename>
+	<path>/home/user/Desktop/data/images/vid6-180.png</path>
+	<source>
+		<database>Unknown</database>
+	</source>
+	<size>
+		<width>1280</width>
+		<height>720</height>
+		<depth>3</depth>
+	</size>
+	<segmented>0</segmented>
+	<object>
+		<name>дорожные работы</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>615</xmin>
+			<ymin>89</ymin>
+			<xmax>690</xmax>
+			<ymax>180</ymax>
+		</bndbox>
+	</object>
+	<object>
+		<name>светофор</name>
+		<pose>Unspecified</pose>
+		<truncated>1</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>314</xmin>
+			<ymin>1</ymin>
+			<xmax>404</xmax>
+			<ymax>147</ymax>
+		</bndbox>
+	</object>
+</annotation>
