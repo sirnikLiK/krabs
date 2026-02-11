@@ -39,29 +39,31 @@ Thumbs.db
 
 # Machine Learning & CAD #
 ##########################
-*.weights
-*.tmfile
-*.onnx
-*.torchscript
-*.step
-*.scale
+# Tracking via Git LFS
+# *.weights
+# *.tmfile
+# *.onnx
+# *.torchscript
+# *.step
+# *.scale
 
 # Media #
 #########
-*.avi
-*.mp4
-*.mkv
-*.mov
-*.png
-*.jpg
-*.jpeg
-*.gif
+# Tracking via Git LFS
+# *.avi
+# *.mp4
+# *.mkv
+# *.mov
+# *.png
+# *.jpg
+# *.jpeg
+# *.gif
 
 # Project specific #
 ####################
-.secret_place/
-secret_place/
-datasets/
+# .secret_place/
+# secret_place/
+# datasets/
 __pycache__/
 *.pyc
 .env
