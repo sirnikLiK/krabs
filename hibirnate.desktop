@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=Гибернация
+Comment=Выключить компьютер с сохранением сессии
+Exec=sudo systemctl hibernate
+Icon=system-suspend-hibernate
+Terminal=false
+Categories=System;
+

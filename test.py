@@ -16,6 +16,7 @@ while True:
     if not ret:
         break
 
+
     # 2. Подготовка: ч/б и размытие
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     gray = cv2.medianBlur(gray, 5)
@@ -44,6 +45,7 @@ while True:
             # Выводим координаты центра рядом
             cv2.putText(frame, f"Center: {i[0]},{i[1]}", (i[0]-40, i[1]-10), 
                         cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1)
+                        
 
     # Выводим результат в окно
     cv2.imshow('Camera Hough Circles', frame)
