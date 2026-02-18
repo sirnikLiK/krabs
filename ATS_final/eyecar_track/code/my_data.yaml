@@ -1,0 +1,6 @@
+path: /home/user/Documents/krabs/eyecar_track
+train: train/images
+val: val/images
+
+nc: 1
+names: ['eyecar']
