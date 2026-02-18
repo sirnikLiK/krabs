@@ -2,10 +2,12 @@ import os
 import shutil
 import time
 import re
+import random
+import string
 
 # --- CONFIGURATION ---
-WATCH_DIR = "/home/stefano/Documents/ATS_final/tresh/output"
-DEST_DIR = "/home/stefano/Documents/ATS_final/tresh/st"
+WATCH_DIR = "/home/stefano/Documents/ATS_nto/ATS_final/tresh/output"
+DEST_DIR = "/home/stefano/Documents/ATS_nto/ATS_final/tresh/st"
 POLL_INTERVAL = 0.5 # Seconds
 
 def extract_digits(filename):
@@ -39,7 +41,11 @@ def process_files():
                     try:
                         # Extract digits and prepare new name
                         digits = extract_digits(f)
-                        new_name = f"{digits}_sk.png"
+                        
+                        # Generate 3 or 4 random English letters
+                        random_prefix = ''.join(random.choices(string.ascii_letters, k=random.choice([3, 4])))
+                        
+                        new_name = f"{random_prefix}_{digits}_sk.png"
                         dest_path = os.path.join(DEST_DIR, new_name)
 
                         # Move and rename

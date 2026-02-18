@@ -8,7 +8,7 @@ except ImportError:
     sys.exit(1)
 
 # --- CONFIGURATION ---
-DATASET_DIR = "/home/stefano/Documents/ATS_final/tresh/dataset_damage"
+DATASET_DIR = "/home/stefano/Documents/ATS_nto/ATS_final/tresh/dataset_damage"
 PROJECT_NAME = "damage_classification"
 MODEL_NAME = "damage_model"
 

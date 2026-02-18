@@ -35,7 +35,12 @@ def predict(image_path, model_path):
 def main():
     parser = argparse.ArgumentParser(description="Predict wall damage level using YOLO")
     parser.add_argument("image", help="Path to the image for prediction")
-    parser.add_argument("--model", default="runs/classify/damage_classification/damage_model/weights/best.pt", help="Path to the trained model")
+    
+    # Construct default model path relative to this script
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    default_model_path = os.path.join(script_dir, "runs", "classify", "damage_classification", "damage_model2", "weights", "best.pt")
+    
+    parser.add_argument("--model", default=default_model_path, help="Path to the trained model")
     
     args = parser.parse_args()
     

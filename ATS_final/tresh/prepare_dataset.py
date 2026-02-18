@@ -4,8 +4,8 @@ import re
 import random
 
 # --- CONFIGURATION ---
-SOURCE_DIR = "/home/stefano/Documents/ATS_final/tresh/st"
-DATASET_ROOT = "/home/stefano/Documents/ATS_final/tresh/dataset_damage"
+SOURCE_DIR = "/home/stefano/Documents/ATS_nto/ATS_final/tresh/st"
+DATASET_ROOT = "/home/stefano/Documents/ATS_nto/ATS_final/tresh/dataset_damage"
 TRAIN_RATIO = 0.8
 
 def extract_damage(filename):
