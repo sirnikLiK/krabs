@@ -18,19 +18,32 @@ def predict(image_path, model_path):
     for result in results:
         probs = result.probs
         if probs is not None:
-            # Get the top class and its confidence
-            top1_idx = probs.top1
-            top1_conf = probs.top1conf.item()
-            label = result.names[top1_idx]
+            # Calculate weighted average damage
+            total_weighted_damage = 0.0
+            total_prob = 0.0
             
             print(f"Image: {image_path}")
-            print(f"Top Prediction: {label}")
-            print(f"Confidence: {top1_conf:.2f}")
             
-            # Map back bucket name to damage range
-            damage_range = label.split('_')[1:] # ['00', '09']
-            if len(damage_range) == 2:
-                print(f"Estimated Damage Level: {damage_range[0]}% - {damage_range[1]}%")
+            for class_idx, class_name in result.names.items():
+                try:
+                    probability = probs.data[class_idx].item()
+                    
+                    # Parse range from class name, assuming format like 'damage_00_09'
+                    parts = class_name.split('_')
+                    if len(parts) >= 3:
+                        start_val = float(parts[-2])
+                        end_val = float(parts[-1])
+                        midpoint = (start_val + end_val) / 2.0
+                        
+                        total_weighted_damage += probability * midpoint
+                        total_prob += probability
+                except (ValueError, IndexError):
+                    continue
+            
+            if total_prob > 0:
+                print(f"Exact Damage: {total_weighted_damage:.4f}")
+            else:
+                print("Could not calculate exact damage (naming format issue?)")
 
 def main():
     parser = argparse.ArgumentParser(description="Predict wall damage level using YOLO")
