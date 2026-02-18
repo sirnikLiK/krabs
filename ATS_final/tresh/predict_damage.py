@@ -51,8 +51,10 @@ def main():
     
     # Construct default model path relative to this script
     script_dir = os.path.dirname(os.path.abspath(__file__))
-    default_model_path = os.path.join(script_dir, "runs", "classify", "damage_classification", "damage_model2", "weights", "best.pt")
-    
+    default_model_path = os.path.join(script_dir, "runs", "classify", "damage_classification", "damage_model2",
+                                      "weights",
+                                      "C:\\Users\\mpjqw\\PycharmProjects\\krabs\\ATS_final\\tresh\\runs\\classify\\damage_classification\\damage_model2\\weights\\best.pt")
+
     parser.add_argument("--model", default=default_model_path, help="Path to the trained model")
     
     args = parser.parse_args()
